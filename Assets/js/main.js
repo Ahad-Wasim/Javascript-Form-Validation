@@ -13,30 +13,52 @@ var pages={
 
 
 
+
+
+
+
+
+//                  OBJECTS
+
 var input_validation = {
     name: 
-        {regex: /[a-zA-Z]{3,}/,
-         error_msg:"Must be at least 3 characters long, no numbers or characters"},
+        {
+        regex: /[a-zA-Z]{3,}/,
+         error_msg:"Must be at least 3 characters long, no numbers or characters"
+        },
+    
     email: 
-        {regex: /[a-zA-Z]{3,}/,
-         error_msg:"Must be at least 3 characters long, no numbers or characters"},
+        {
+        regex: /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
+         error_msg:"Must be at least 3 characters long, no numbers or characters"
+        },
+    
     phone: 
-        {regex: /[a-zA-Z]{3,}/,
-         error_msg:"Must be at least 3 characters long, no numbers or characters"},
+        {
+        regex: /[a-zA-Z]{3,}/,
+         error_msg:"Must be at least 3 characters long, no numbers or characters"
+        },
+    
     subject:
-    {
-     regex: /.{3,50}/,
-     error_msg: "There is a problem",   
-    },
+        {
+        regex: /.{3,50}/,
+        error_msg: "There is a problem",   
+        },
+    
     comments:
-    {
+        {
         regex: /.{3,250}/,
         error_msg:"There is a problem",
-    }
-    
-    
-    
+        }
+ 
 };
+
+
+//                   OBJECTS
+
+
+
+
 
 
 
@@ -79,6 +101,14 @@ function create_menu(){
 }
 
 
+
+
+
+
+
+
+
+
 function load_page(page_url){
     //load the indicated page into the #main_content section
     $.get(page_url,function(data){
@@ -101,20 +131,20 @@ function validate_contact(){
     var error_count = 0;                                                                    // If their is an Error. The MESSAGE WONT SEND. Start the Error at 0
    
     
-        $("#contact_form .error_msg").remove();                                  // everytime we start this function we want to remove the current error. So the user does not see.
+        $("#contact_form .error_msg").remove();                          // everytime we start this function we want to remove the current error. So the user does not see their previous error
     
     $(contact_inputs).each(function(){                                                      // Iterate through the Contact Form Inputs + The TextArea 
        
         var str = $(this).val();                                                             // this str is looping through all the inputs and will get the value 1 by 1.
         
-        var regex= null;                                                                     // if regex is not vailid it will equal null
+        var regex = input_validation[$(this).attr('name')].regex;                            // It will go thru the input validation and get the currents inputs name and regex                      
         
-        var error_msg = '';                                                                 // error message will start off blank
+        var error_msg = input_validation[$(this).attr('name')].error_msg;        // It will go thru the input validation and get the currents inputs name and error_msg                  
         
         
         
-        regex = input_validation[$(this).attr('name')].regex;                               // It will go thru the input validation and get the currents inputs name and regex                               
-        error_msg = input_validation[$(this).attr('name')].error_msg;                       //// It will go thru the input validation and get the currents inputs name and error_msg                       
+                                                                                                           
+                                                                                                       
         
         
         
@@ -158,15 +188,20 @@ function validate_contact(){
         
         
         
-        if(regex!==null){                                                                   // if regex is equal to null   MEANING IT HAS EXITED THE SWITCH STATEMENT WITH AN ERROR
-            if(str.match(regex)===null){ //if there was a validation error
-                //alert($(this).attr('name')+":"+error_msg); //send error message
+        if(regex!==null){                                                                   // if their is something inside the regex
+            if(str.match(regex)===null){ //if there was a validation error                  // match the regex. IF THEIRS A NULL THAT MEANS THE REGEX DOES NOT MATCH THE STR
+                
                 
                 var error_div = $("<div/>").addClass('error_msg alert alert-danger').text(error_msg);        // make a variable create a span add a class and the error message inside the tex
-                error_div.insertAfter($(this));                                          // use jQuery insert after to insert the error_span after this
+                
+                error_div.insertAfter($(this));                                             // use jQuery insert after to insert the error_span after this
+                
                 var close_button = $("<button/>",{type:'button',class:'close',"data-dismiss":'alert','aria-label':'Close'});
+                
                 var span = $('<span>',{'aria-hidden':'true'}).html('&times;');
+                
                 close_button.append(span);
+                
                 error_div.append(close_button);
                 //$(this).parent().find('.error_msg').html(error_msg);
                 
@@ -175,16 +210,18 @@ function validate_contact(){
             }
             
             
-        }  // exit the if statement
-    });      // for the each function
+        }                        // exit the if statement
+        
+        
+    });                         // for the each function
     
     
     
     
     
     console.log("error count " +error_count);
-    if(error_count==0){                                                                     //if no errors
-        send_message();                                                                     //trigger our form submission function
+    if(error_count==0){                                                                     //  if no errors
+        send_message();                                                                     //  trigger our form submission function
     }
     else {
         return false;                                                                       //return false, so that the form submit will fail
