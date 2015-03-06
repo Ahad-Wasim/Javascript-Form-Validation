@@ -78,15 +78,15 @@ function load_page(page_url){
 function validate_contact(){
     var contact_inputs = $("#contact_form input, #contact_form textarea");                  // Grab the Contact Form Inputs + The TextArea and storing that in a variable
     console.log(contact_inputs);                                                            
-    //keep track of how many errors there are
+    
     var error_count = 0;                                                                    // If their is an Error. The MESSAGE WONT SEND. Start the Error at 0
    
     
-        $("#contact_form .error_msg").remove();                                             // if there is an error remove it
+        $("#contact_form .error_msg").remove();                                  // everytime we start this function we want to remove the current error. So the user does not see.
     
     $(contact_inputs).each(function(){                                                      // Iterate through the Contact Form Inputs + The TextArea 
        
-        var str='';                                                     // the str val would hold the value inside the input. We would then compare that later on
+        var str='';                                                             // the str val would hold the value inside the input. We would then compare that later on
         
         var regex=null;                                                                     // if regex is not vailid it will equal null
         
@@ -99,24 +99,20 @@ function validate_contact(){
         //input_validation[$(this).attr('name')];  //beginnings of USING the object for input validation
         
         
+
         
-        
-        
-        
-        
-        
-        switch($(this).attr('name')){                                                         // if this inputs value .attribute = name
-                case 'name':                                                                  // if the attributes name == name then perform the bottom
+        switch($(this).attr('name')){                                                           // if this inputs value .attribute = name
+                case 'name':                                                                    // if the attributes name == name then perform the bottom
                    
-                str = $(this).val();                                                          //the variable str == the value
-                    regex = /[a-zA-Z]{3,}/;                                                   // the REGEX the str must equal to
-                    error_msg="Must be at least 3 characters long, no numbers or characters"; // if Regex does not match perform this part
+                    str = $(this).val();                                                        // the variable str == the value
+                    regex = /[a-zA-Z]{3,}/;                                                     // the REGEX the str must equal to
+                    error_msg="Must be at least 3 characters long, no numbers or characters";   // if Regex does not match perform this part
                     break;
                 
                 case 'email':                                                               // if the attributes name == email then perform the bottom
                     str = $(this).val();                                                    //Grab the value of that and store it inside string
-                    regex = null;                                                           //were not trying to match the REGEX so it is all ready returning null
-                    error_msg="";                                                           // There is no error message
+                    regex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/;              //were not trying to match the REGEX so it is all ready returning null
+                    error_msg="Please Enter a proper email";                                // There is no error message
                     break;
                 
                 case 'phone':                                                               // if the attributes name == phone then perform the bottom
@@ -146,9 +142,12 @@ function validate_contact(){
             if(str.match(regex)===null){ //if there was a validation error
                 //alert($(this).attr('name')+":"+error_msg); //send error message
                 
-                var error_span = $("<span/>").addClass('error_msg').text(error_msg);        // make a variable create a span add a class and the error message inside the tex
-                error_span.insertAfter($(this));                                          // use jQuery insert after to insert the error_span after this
-                
+                var error_div = $("<div/>").addClass('error_msg alert alert-danger').text(error_msg);        // make a variable create a span add a class and the error message inside the tex
+                error_div.insertAfter($(this));                                          // use jQuery insert after to insert the error_span after this
+                var close_button = $("<button/>",{type:'button',class:'close',"data-dismiss":'alert','aria-label':'Close'});
+                var span = $('<span>',{'aria-hidden':'true'}).html('&times;');
+                close_button.append(span);
+                error_div.append(close_button);
                 //$(this).parent().find('.error_msg').html(error_msg);
                 
                 
@@ -178,7 +177,13 @@ function send_message(){  //dummy function for sending message                  
         return
     }
     
-    var succeed = $('<span>').text("Your message was sent successfully").css({color:'green', marginTop:'5px',border:'1px solid black'});
+    var succeed = $('<div>').text("Your message was sent successfully").addClass('alert alert-success');
+    var close_button = $("<button/>",{type:'button',class:'close',"data-dismiss":'alert','aria-label':'Close'});
+    var span = $('<span>',{'aria-hidden':'true'}).html('&times;');
+    close_button.append(span);
+    succeed.append(close_button);
+    
+    
     console.log(succeed);
     
     succeed.insertAfter('button');
