@@ -10,6 +10,9 @@ var pages={
 };
 
 //beginnings of an object for use with error validation
+
+
+
 var input_validation = {
     name: 
         {regex: /[a-zA-Z]{3,}/,
@@ -20,7 +23,23 @@ var input_validation = {
     phone: 
         {regex: /[a-zA-Z]{3,}/,
          error_msg:"Must be at least 3 characters long, no numbers or characters"},
+    subject:
+    {
+     regex: /.{3,50}/,
+     error_msg: "There is a problem",   
+    },
+    comments:
+    {
+        regex: /.{3,250}/,
+        error_msg:"There is a problem",
+    }
+    
+    
+    
 };
+
+
+
 
 $("document").ready(function(){
 
@@ -86,22 +105,22 @@ function validate_contact(){
     
     $(contact_inputs).each(function(){                                                      // Iterate through the Contact Form Inputs + The TextArea 
        
-        var str='';                                                             // the str val would hold the value inside the input. We would then compare that later on
+        var str = $(this).val();                                                             // this str is looping through all the inputs and will get the value 1 by 1.
         
-        var regex=null;                                                                     // if regex is not vailid it will equal null
+        var regex= null;                                                                     // if regex is not vailid it will equal null
         
         var error_msg = '';                                                                 // error message will start off blank
         
         
         
+        regex = input_validation[$(this).attr('name')].regex;                               // It will go thru the input validation and get the currents inputs name and regex                               
+        error_msg = input_validation[$(this).attr('name')].error_msg;                       //// It will go thru the input validation and get the currents inputs name and error_msg                       
         
-        
-        //input_validation[$(this).attr('name')];  //beginnings of USING the object for input validation
         
         
 
         
-        switch($(this).attr('name')){                                                           // if this inputs value .attribute = name
+       /* switch($(this).attr('name')){                                                           // if this inputs value .attribute = name
                 case 'name':                                                                    // if the attributes name == name then perform the bottom
                    
                     str = $(this).val();                                                        // the variable str == the value
@@ -134,6 +153,7 @@ function validate_contact(){
                 default:
         } //This closes the switch statement
         
+        */
         
         
         
@@ -156,7 +176,10 @@ function validate_contact(){
             
             
         }  // exit the if statement
-    });  // for the each function
+    });      // for the each function
+    
+    
+    
     
     
     console.log("error count " +error_count);
